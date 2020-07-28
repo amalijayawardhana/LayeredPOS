@@ -18,9 +18,11 @@ import util.OrderTM;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class SearchOrdersFormController {
@@ -57,7 +59,7 @@ public class SearchOrdersFormController {
                     if ((order.getOrderId().toLowerCase().contains(lowerCaseFilter))||
                             order.getCustomerId().toLowerCase().contains(lowerCaseFilter) ||
                             order.getCustomerName().toLowerCase().contains(lowerCaseFilter) ||
-                            /*order.getOrderDate().contains(newValue) ||*/
+                            order.getOrderDate().toString().contains(newValue) ||
                             String.valueOf(order.getOrderTotal()).contains(lowerCaseFilter)){
                         search.add(order);
                     }
@@ -70,7 +72,7 @@ public class SearchOrdersFormController {
         try {
             PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement
                     ("SELECT o.OrderID, o.OrderDate, o.CustomerID,c.CustomerName, SUM(od.OrderQTY * od.UnitPrice) AS Total\n" +
-                            "FROM orders o INNER JOIN customer c ON c.CustomerID = o.CustomerID\n" +
+                            "FROM `order` o INNER JOIN customer c ON c.CustomerID = o.CustomerID\n" +
                             "INNER JOIN orderdetail od ON od.OrderID = o.OrderID\n" +
                             "GROUP BY o.OrderID");
             ResultSet rst = pstm.executeQuery();

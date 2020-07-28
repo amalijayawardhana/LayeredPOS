@@ -7,5 +7,11 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost:3306/dep5</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="pos_system@localhost" uuid="2259b7fd-758f-4b43-95a2-c91ecb6f7cea">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:3306/pos_system</jdbc-url>
+    </data-source>
   </component>
 </project>

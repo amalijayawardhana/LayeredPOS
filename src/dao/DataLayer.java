@@ -14,18 +14,32 @@ import java.util.List;
 
 public class DataLayer {
 
+    public static String getLastCustomerId(){
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            Statement stm = connection.createStatement();
+            ResultSet rst = stm.executeQuery("SELECT * FROM Customer ORDER BY customerid DESC  LIMIT 1");
+            if (rst.next()){
+                return rst.getString(1);
+            }else{
+                return null;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
     public static List<CustomerTM> getAllCustomers(){
         try {
             Connection connection = DBConnection.getInstance().getConnection();
-            Statement stm = null;
-            stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * Customer");
+            Statement stm = connection.createStatement();
+            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
             ArrayList<CustomerTM> customers = new ArrayList<>();
-            while (rst.next()) {
-                String id = rst.getString(1);
-                String name = rst.getString(2);
-                String address = rst.getString(3);
-                customers.add(new CustomerTM(id, name, address));
+            while (rst.next()){
+                customers.add(new CustomerTM(rst.getString(1),
+                        rst.getString(2),
+                        rst.getString(3)));
             }
             return customers;
         } catch (SQLException e) {
@@ -51,7 +65,7 @@ public class DataLayer {
 
     }
 
-    public static boolean  updateCustomers(CustomerTM customer){
+    public static boolean  updateCustomer(CustomerTM customer){
         PreparedStatement pstm = null;
 
         try {
@@ -67,7 +81,7 @@ public class DataLayer {
 
     }
 
-    public static boolean deleteCustomers(String customerId){
+    public static boolean deleteCustomer(String customerId){
         PreparedStatement pstm = null;
         try {
             pstm = DBConnection.getInstance().getConnection().prepareStatement("DELETE FROM Customer WHERE customerid=?");
@@ -80,13 +94,28 @@ public class DataLayer {
 
     }
     //item
+    public static String getLastitemCode(){
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            Statement stm = connection.createStatement();
+            ResultSet rst = stm.executeQuery("SELECT * FROM item ORDER BY itemcode DESC  LIMIT 1");
+            if (rst.next()){
+                return rst.getString(1);
+            }else{
+                return null;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
 
     public static List<ItemTM> getAllItems(){
         try {
             Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = null;
             stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * item");
+            ResultSet rst = stm.executeQuery("SELECT * FROM item");
             ArrayList<ItemTM> items = new ArrayList<>();
                 while (rst.next()) {
                     items.add(new ItemTM(rst.getString(1),
@@ -109,7 +138,7 @@ public class DataLayer {
             pstm.setObject(1, item.getCode());
             pstm.setObject(2, item.getDescription());
             pstm.setObject(3, item.getQtyOnHand());
-            pstm.setObject(3, item.getUnitPrice());
+            pstm.setObject(4, item.getUnitPrice());
             return pstm.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -136,7 +165,7 @@ public class DataLayer {
 
     }
 
-    public static boolean deleteItems(String itemCode){
+    public static boolean deleteItem(String itemCode){
         PreparedStatement pstm = null;
         try {
             pstm = DBConnection.getInstance().getConnection().prepareStatement("DELETE FROM Item WHERE itemcode=?");
@@ -202,6 +231,84 @@ public class DataLayer {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
+        }
+    }
+
+
+    public static boolean saveOrder(OrderTM order){
+        Connection connection = DBConnection.getInstance().getConnection();
+        try {
+            PreparedStatement pstm = connection.prepareStatement("INSERT INTO Orders VALUES (?,?,?)");
+            pstm.setObject(1, order.getOrderId());
+            pstm.setObject(2, order.getOrderDate());
+            pstm.setObject(3, order.getCustomerId());
+            int affectedRows = pstm.executeUpdate();
+            if (affectedRows ==0){
+//                connection.rollback();
+                return false;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean saveOrderDetail(OrderTM order, OrderDetailTM orderDetail){
+        Connection connection = DBConnection.getInstance().getConnection();
+
+                PreparedStatement pstm = null;
+                try {
+                    pstm = connection.prepareStatement("INSERT INTO OrderDetail VALUES (?,?,?,?)");
+                    pstm.setObject(1, order.getOrderId());
+                    pstm.setObject(2, orderDetail.getCode());
+                    pstm.setObject(3, orderDetail.getQty());
+                    pstm.setObject(4, orderDetail.getUnitPrice());
+                    int affectedRows = pstm.executeUpdate();
+                    if (affectedRows == 0) {
+//                        connection.rollback();
+                        return false;
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+        return false;
+    }
+
+    public static boolean updateItemQty(OrderDetailTM orderDetail){
+        Connection connection = DBConnection.getInstance().getConnection();
+
+        PreparedStatement pstm = null;
+        try {
+            pstm = connection.prepareStatement("UPDATE Item SET qtyOnHand=qtyOnHand - ? WHERE itemcode=?");
+            pstm.setObject(1, orderDetail.getQty());
+            pstm.setObject(2, orderDetail.getCode());
+
+            int affectedRows = pstm.executeUpdate();
+
+            if (affectedRows == 0) {
+//                connection.rollback();
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static String getLastOrderId(){
+        try {
+            Connection connection = DBConnection.getInstance().getConnection();
+            Statement stm = connection.createStatement();
+            ResultSet rst = stm.executeQuery("SELECT * FROM orders ORDER BY orderId DESC  LIMIT 1");
+            if (rst.next()){
+                return rst.getString(1);
+            }else{
+                return null;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
         }
     }
 }

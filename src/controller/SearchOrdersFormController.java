@@ -57,7 +57,7 @@ public class SearchOrdersFormController {
                     if ((order.getOrderId().toLowerCase().contains(lowerCaseFilter))||
                             order.getCustomerId().toLowerCase().contains(lowerCaseFilter) ||
                             order.getCustomerName().toLowerCase().contains(lowerCaseFilter) ||
-                            order.getOrderDate().contains(newValue) ||
+                            /*order.getOrderDate().contains(newValue) ||*/
                             String.valueOf(order.getOrderTotal()).contains(lowerCaseFilter)){
                         search.add(order);
                     }
@@ -82,9 +82,9 @@ public class SearchOrdersFormController {
                 String customerID = rst.getString("CustomerID");
                 String customerName = rst.getString("CustomerName");
                 double total = rst.getDouble("Total");
-                OrderTM searchitem = new OrderTM(orderID,orderDate,customerID,customerName,total);
+/*                OrderTM searchitem = new OrderTM(orderID,orderDate,customerID,customerName,total);
                 searchDetails.add(searchitem);
-                searchOrdersArray.add(searchitem);
+                searchOrdersArray.add(searchitem);*/
             }
         } catch (SQLException e) {
             e.printStackTrace();

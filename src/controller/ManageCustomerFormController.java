@@ -5,9 +5,11 @@
  */
 package controller;
 
+import business.BusinessLogic;
 import db.DBConnection;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +30,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -95,20 +98,10 @@ public class ManageCustomerFormController implements Initializable {
     }
 
     private void loadAllCustomers() {
-        try {
-            ObservableList<CustomerTM> customers = tblCustomers.getItems();
-            customers.clear();
-            Statement stm = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
-            while (rst.next()) {
-                String id = rst.getString(1);
-                String name = rst.getString(2);
-                String address = rst.getString(3);
-                customers.add(new CustomerTM(id, name, address));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        tblCustomers.getItems().clear();
+        List<CustomerTM> allCustomers = BusinessLogic.getAllCustomers();
+        ObservableList<CustomerTM> customers = FXCollections.observableList(allCustomers);
+        tblCustomers.setItems(customers);
     }
 
     @FXML
@@ -133,35 +126,14 @@ public class ManageCustomerFormController implements Initializable {
         }
 
         if (btnSave.getText().equals("Save")) {
-
-            try {
-                PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement("INSERT INTO Customer VALUES (?,?,?)");
-                pstm.setObject(1, txtCustomerId.getText());
-                pstm.setObject(2, txtCustomerName.getText());
-                pstm.setObject(3, txtCustomerAddress.getText());
-                int affectedRows = pstm.executeUpdate();
-                if (affectedRows == 0) {
-                    new Alert(Alert.AlertType.ERROR, "Failed to add the customer", ButtonType.OK).show();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            BusinessLogic.saveCustomer(txtCustomerId.getText(),txtCustomerName.getText(),txtCustomerAddress.getText());
             btnAddNew_OnAction(event);
         } else {
             CustomerTM selectedItem = tblCustomers.getSelectionModel().getSelectedItem();
-
-            try {
-                PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement("UPDATE Customer SET customername=?, customeraddress=? WHERE customerid=?");
-                pstm.setObject(1, txtCustomerName.getText());
-                pstm.setObject(2, txtCustomerAddress.getText());
-                pstm.setObject(3, selectedItem.getId());
-                if (pstm.executeUpdate() == 0) {
-                    new Alert(Alert.AlertType.ERROR, "Failed to update the customer", ButtonType.OK).show();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            boolean result = BusinessLogic.updateCustomer(txtCustomerName.getText(), txtCustomerAddress.getText(), selectedItem.getId());
+            if (!result){
+                new Alert(Alert.AlertType.ERROR, "Fail to update the customer",ButtonType.OK).show();
             }
-
             tblCustomers.refresh();
             btnAddNew_OnAction(event);
         }
@@ -176,18 +148,12 @@ public class ManageCustomerFormController implements Initializable {
         Optional<ButtonType> buttonType = alert.showAndWait();
         if (buttonType.get() == ButtonType.YES) {
             CustomerTM selectedItem = tblCustomers.getSelectionModel().getSelectedItem();
-
-            try {
-                PreparedStatement pstm = DBConnection.getInstance().getConnection().prepareStatement("DELETE FROM Customer WHERE customerid=?");
-                pstm.setObject(1, selectedItem.getId());
-                if (pstm.executeUpdate() == 0) {
-                    new Alert(Alert.AlertType.ERROR, "Failed to delete the customer", ButtonType.OK).show();
-                } else {
-                    tblCustomers.getItems().remove(selectedItem);
-                    tblCustomers.getSelectionModel().clearSelection();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            boolean result = BusinessLogic.deleteCustomer(selectedItem.getId());
+            if (!result){
+                new Alert(Alert.AlertType.ERROR, "Fail to Delete the customer",ButtonType.OK).show();
+            }else {
+                tblCustomers.getItems().remove(selectedItem);
+                tblCustomers.getSelectionModel().clearSelection();
             }
         }
     }
@@ -204,26 +170,7 @@ public class ManageCustomerFormController implements Initializable {
         btnSave.setDisable(false);
 
         // Generate a new id
-        int maxId = 0;
-        try {
-            Statement stm = DBConnection.getInstance().getConnection().createStatement();
-            ResultSet rst = stm.executeQuery("SELECT customerid FROM Customer ORDER BY customerid DESC LIMIT 1");
-            if (rst.next()) {
-                maxId = Integer.parseInt(rst.getString(1).replace("C", ""));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        maxId = maxId + 1;
-        String id = "";
-        if (maxId < 10) {
-            id = "C00" + maxId;
-        } else if (maxId < 100) {
-            id = "C0" + maxId;
-        } else {
-            id = "C" + maxId;
-        }
-        txtCustomerId.setText(id);
+        txtCustomerId.setText(BusinessLogic.getNewCustomerId());
 
     }
 

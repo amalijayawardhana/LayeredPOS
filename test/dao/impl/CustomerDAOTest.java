@@ -1,9 +1,4 @@
-package dao;
-
-import dao.CustomerDAO;
-import entity.Customer;
-
-import java.util.List;
+package dao.impl;
 
 public class CustomerDAOTest {
     public static void main(String[] args) {
@@ -14,6 +9,6 @@ public class CustomerDAOTest {
         for (Customer allCustomer : allCustomers) {
             System.out.println(allCustomer);
         }*/
-        assert CustomerDAO.findAllCustomers().size() == 35;
+//        assert new CustomerDAO().findAllCustomers().size() == 35;
     }
 }

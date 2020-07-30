@@ -4,11 +4,11 @@ import entity.Item;
 
 import java.util.List;
 
-public interface ItemDAO {
+public interface ItemDAO extends SuperDAO {
     public String getLastitemCode();
-    public List<Item> findAllItems();
+/*    public List<Item> findAllItems();
     public Item findItem(String id);
     public boolean saveItem(Item item);
     public boolean updateItem(Item item);
-    public boolean deleteItem(String id);
+    public boolean deleteItem(String id);*/
 }

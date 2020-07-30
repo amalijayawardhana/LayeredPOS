@@ -4,12 +4,12 @@ import entity.Customer;
 
 import java.util.List;
 
-public interface CustomerDAO {
+public interface CustomerDAO extends SuperDAO {
     public String getLastCustomerId();
-    public List<Customer> findAllCustomers();
-    public Customer findCustomer(String id);
-    public boolean saveCustomer(Customer customer);
-    public boolean updateCustomer(Customer customer);
-    public boolean deleteCustomer(String id);
+/*    public List<Object> findAll();
+    public Object find(Object id);
+    public boolean save(Object customer);
+    public boolean update(Object customer);
+    public boolean delete(Object id);*/
 
     }

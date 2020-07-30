@@ -3,7 +3,7 @@ package dao.custom;
 import dao.SuperDAO;
 import entity.Customer;
 
-public interface CustomerDAO extends SuperDAO<Customer,String> {
+public interface CustomerDAO extends CrudDAO<Customer,String> {
     public String getLastCustomerId();
 /*    public List<Object> findAll();
     public Object find(Object id);

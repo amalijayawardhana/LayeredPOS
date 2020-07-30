@@ -3,7 +3,7 @@ package entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Item implements Serializable {
+public class Item implements SuperEntity {
     private String itemCode;
     private String description;
     private BigDecimal unitprice;

@@ -1,8 +1,7 @@
-package dao.impl;
+package dao.custom.impl;
 
-import dao.ItemDAO;
+import dao.custom.ItemDAO;
 import db.DBConnection;
-import entity.Customer;
 import entity.Item;
 
 import java.sql.*;

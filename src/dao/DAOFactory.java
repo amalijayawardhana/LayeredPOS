@@ -16,19 +16,34 @@ public class DAOFactory {
     public DAOFactory() {
     }
 
-    public static DAOFactory getInstance(){
-        return (daoFactory == null)? daoFactory = new DAOFactory(): daoFactory;
+    public static DAOFactory getInstance() {
+        return (daoFactory == null) ? daoFactory = new DAOFactory() : daoFactory;
     }
-    public CustomerDAO getCustomerDAO(){
-        return new CustomerDAOImpl();
-    }
-    public ItemDAO getItemDAO(){
-        return new ItemDAOImpl();
-    }
-    public OrderDAO getOrderDAO(){
-        return new OrderDAOImpl();
-    }
-    public OrderDetailDAO getOrderDetailDAO(){
-        return new OrderDetailDAOImpl();
+
+    /*    public CustomerDAO getCustomerDAO(){
+            return new CustomerDAOImpl();
+        }
+        public ItemDAO getItemDAO(){
+            return new ItemDAOImpl();
+        }
+        public OrderDAO getOrderDAO(){
+            return new OrderDAOImpl();
+        }
+        public OrderDetailDAO getOrderDetailDAO(){
+            return new OrderDetailDAOImpl();
+        }*/
+    public SuperDAO getDAO(int daoType) {
+        switch (daoType) {
+            case 0:
+                return new CustomerDAOImpl();
+            case 1:
+                return new ItemDAOImpl();
+            case 2:
+                return new OrderDAOImpl();
+            case 3:
+                return new OrderDetailDAOImpl();
+            default:
+                return null;
+        }
     }
 }

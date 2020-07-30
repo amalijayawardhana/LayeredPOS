@@ -32,15 +32,15 @@ public class DAOFactory {
         public OrderDetailDAO getOrderDetailDAO(){
             return new OrderDetailDAOImpl();
         }*/
-    public SuperDAO getDAO(int daoType) {
+    public SuperDAO getDAO(DAOType daoType) {
         switch (daoType) {
-            case 0:
+            case CUSTOMER:
                 return new CustomerDAOImpl();
-            case 1:
+            case ITEM:
                 return new ItemDAOImpl();
-            case 2:
+            case ORDER:
                 return new OrderDAOImpl();
-            case 3:
+            case ORDERDETAIL:
                 return new OrderDetailDAOImpl();
             default:
                 return null;

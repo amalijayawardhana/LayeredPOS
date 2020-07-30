@@ -28,12 +28,12 @@ public class OrderDAOImpl implements OrderDAO {
         }
     }
 
-    public List<Object> findAll(){
+    public List<Order> findAll(){
         Connection connection = DBConnection.getInstance().getConnection();
         try {
             Statement stm = connection.createStatement();
             ResultSet rst = stm.executeQuery("SELECT * FROM `order`");
-            ArrayList<Object> orders = new ArrayList<>();
+            ArrayList<Order> orders = new ArrayList<>();
             while (rst.next()){
                 orders.add( new Order(rst.getString(1), rst.getDate(2),
                         rst.getString(3)));
@@ -45,7 +45,8 @@ public class OrderDAOImpl implements OrderDAO {
         return null;
     }
 
-    public Object find(Object key){
+    @Override
+    public Order find(String key) {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
             PreparedStatement pstm = connection.prepareStatement("SELECT * FROM `order` WHERE orderId =?");
@@ -61,11 +62,11 @@ public class OrderDAOImpl implements OrderDAO {
         return null;
     }
 
-    public boolean save(Object entity){
+    @Override
+    public boolean save(Order order) {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
             PreparedStatement pstm = connection.prepareStatement("INSERT INTO `order` VALUES (?,?,?)");
-            Order order = (Order) entity;
             pstm.setObject(1,order.getOrderId());
             pstm.setObject(2,order.getOrderDate());
             pstm.setObject(3,order.getCustomerId());
@@ -76,12 +77,12 @@ public class OrderDAOImpl implements OrderDAO {
         }
     }
 
-    public boolean update(Object entity){
+    @Override
+    public boolean update(Order order) {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
             PreparedStatement pstm = connection.prepareStatement
                     ("UPDATE `order` SET orderDate=?,customerId=? WHERE orderId =?)");
-            Order order = (Order) entity;
             pstm.setObject(3,order.getOrderId());
             pstm.setObject(1,order.getOrderDate());
             pstm.setObject(2,order.getCustomerId());
@@ -92,7 +93,8 @@ public class OrderDAOImpl implements OrderDAO {
         }
     }
 
-    public boolean delete(Object key){
+    @Override
+    public boolean delete(String key) {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM `order` WHERE orderId =?");

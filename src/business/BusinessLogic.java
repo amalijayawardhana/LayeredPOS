@@ -46,22 +46,9 @@ public class BusinessLogic {
         }
     }
 
-/*    public static List<CustomerTM> getAllCustomers(){
-        return DataLayer.getAllCustomers();
-    }*/
-/*    public static boolean saveCustomer(String id, String name, String address){
-        return DataLayer.saveCustomers(new CustomerTM(id,name,address));
-    }*/
- /*   public static boolean deleteCustomer(String customerId){
-        return DataLayer.deleteCustomer(customerId);
-    }*/
- /*    public static boolean updateCustomer(String name, String address, String customerId){
-        return DataLayer.updateCustomer(new CustomerTM(customerId, name, address));
-    }*/
-
     public static List<CustomerTM> getAllCustomers(){
         CustomerDAOImpl customerDAO = new CustomerDAOImpl();
-        List<Object> allCustomers = customerDAO.findAll();
+        List<Customer> allCustomers = customerDAO.findAll();
         ArrayList<CustomerTM> customers = new ArrayList<>();
         for (Object c : allCustomers) {
             Customer customer = (Customer) c;
@@ -89,7 +76,7 @@ public class BusinessLogic {
 
     public static List<ItemTM> getAllItems(){
         ItemDAOImpl itemDAO = new ItemDAOImpl();
-        List<Object> allItems = itemDAO.findAll();
+        List<Item> allItems = itemDAO.findAll();
         ArrayList<ItemTM> items = new ArrayList<>();
         for (Object i : allItems) {
             Item item = (Item) i;

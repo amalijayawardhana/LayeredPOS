@@ -4,7 +4,7 @@ import entity.Order;
 
 import java.util.List;
 
-public interface OrderDAO extends SuperDAO {
+public interface OrderDAO extends SuperDAO<Order,String> {
     public String getLastOrderId();
 /*    public List<Order> findAllOrders();
     public Order findOrder(String orderId);

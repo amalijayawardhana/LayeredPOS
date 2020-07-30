@@ -35,7 +35,7 @@ public class QueryDAOImpl implements QueryDAO {
             Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement("SELECT o.OrderID,c.CustomerName, c.customerId \n" +
                     "FROM customer c INNER JOIN `order` o on c.CustomerID = o.CustomerID\n" +
-                    " WHERE o.OrderID =?");
+                    " WHERE o.customerId =?");
             pstm.setObject(1,customerId);
             ResultSet rst = pstm.executeQuery();
             if (rst.next()){

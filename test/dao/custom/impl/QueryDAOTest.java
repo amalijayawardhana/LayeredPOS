@@ -17,7 +17,7 @@ public class QueryDAOTest {
         CustomEntity d002 = queryDAO.getOrderDetail("D002");
         System.out.println(d002.getOrderId()+", "+d002.getOrderDate()+", "+d002.getCustomerId()+", "+
                 d002.getCustomerName()+", "+d002.getTotal());
-        //getCustomerDetail1
+        //getCustomerDetail2
       CustomEntity c001 = queryDAO.getCustomerDetail2("C001");
         System.out.println(c001.getOrderId()+", "+c001.getCustomerName()+", "
                 +c001.getCustomerId());

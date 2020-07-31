@@ -1,5 +1,6 @@
 package dao.custom.impl;
 
+import dao.CrudUtil;
 import dao.custom.OrderDAO;
 import db.DBConnection;
 import entity.Order;
@@ -12,9 +13,7 @@ public class OrderDAOImpl implements OrderDAO {
 
     public String getLastOrderId(){
         try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM `order` ORDER BY orderId DESC  LIMIT 1");
+            ResultSet rst = CrudUtil.execute("SELECT * FROM `order` ORDER BY orderId DESC  LIMIT 1");
             if (rst.next()){
                 return rst.getString(1);
             }else{
@@ -27,10 +26,8 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     public List<Order> findAll(){
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM `order`");
+            ResultSet rst = CrudUtil.execute("SELECT * FROM `order`");
             ArrayList<Order> orders = new ArrayList<>();
             while (rst.next()){
                 orders.add( new Order(rst.getString(1), rst.getDate(2),
@@ -45,11 +42,8 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public Order find(String key) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM `order` WHERE orderId =?");
-            pstm.setObject(1,key);
-            ResultSet rst = pstm.executeQuery();
+            ResultSet rst = CrudUtil.execute("SELECT * FROM `order` WHERE orderId =?",key);
             if (rst.next()){
                 return new Order(rst.getString(1), rst.getDate(2),
                         rst.getString(3));
@@ -62,13 +56,9 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public boolean save(Order order) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO `order` VALUES (?,?,?)");
-            pstm.setObject(1,order.getOrderId());
-            pstm.setObject(2,order.getOrderDate());
-            pstm.setObject(3,order.getCustomerId());
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("INSERT INTO `order` VALUES (?,?,?)",order.getOrderId(),order.getOrderDate(),
+                    order.getCustomerId());
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -77,14 +67,9 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public boolean update(Order order) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement
-                    ("UPDATE `order` SET orderDate=?,customerId=? WHERE orderId =?)");
-            pstm.setObject(3,order.getOrderId());
-            pstm.setObject(1,order.getOrderDate());
-            pstm.setObject(2,order.getCustomerId());
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("UPDATE `order` SET orderDate=?,customerId=? WHERE orderId =?)"
+                    ,order.getOrderDate(),order.getCustomerId(),order.getOrderId());
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -93,11 +78,8 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public boolean delete(String key) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM `order` WHERE orderId =?");
-            pstm.setObject(1,key);
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("DELETE FROM `order` WHERE orderId =?", key);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

@@ -13,7 +13,7 @@ public class CrudUtil {
         Connection connection = DBConnection.getInstance().getConnection();
             PreparedStatement pstm = connection.prepareStatement(sql);
             int i = 0;
-            System.out.println(parameters[0]);
+//            System.out.println(parameters[0]);
             for (Object parameter : parameters) {
                 i++;
                 pstm.setObject(i,parameter);

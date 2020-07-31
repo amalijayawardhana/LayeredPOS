@@ -1,5 +1,6 @@
 package dao.custom.impl;
 
+import dao.CrudUtil;
 import dao.custom.OrderDetailDAO;
 import db.DBConnection;
 import entity.OrderDetail;
@@ -13,10 +14,8 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
 
 
     public List<OrderDetail> findAll(){
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM orderDetail");
+            ResultSet rst = CrudUtil.execute("SELECT * FROM orderDetail");
             ArrayList<OrderDetail> orderDetails = new ArrayList<>();
             while (rst.next()){
                 orderDetails.add( new OrderDetail(rst.getString(1), rst.getString(2),
@@ -31,13 +30,8 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
 
     @Override
     public OrderDetail find(OrderDetailPK key) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM orderDetail WHERE orderId =? AND itemCode =?");
-            pstm.setObject(1,key.getOrderId());
-            pstm.setObject(2,key.getItemCode());
-
-            ResultSet rst = pstm.executeQuery();
+            ResultSet rst = CrudUtil.execute("SELECT * FROM orderDetail WHERE orderId =? AND itemCode =?",key.getOrderId(),key.getItemCode());
             if (rst.next()){
                 return new OrderDetail(rst.getString(1), rst.getString(2),
                         rst.getInt(3),rst.getBigDecimal(4));
@@ -50,15 +44,11 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
 
     @Override
     public boolean save(OrderDetail OrderDetail) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO orderDetail VALUES (?,?,?,?)");
-            pstm.setObject(1,OrderDetail.getOrderDetailPK().getOrderId());
-            pstm.setObject(2,OrderDetail.getOrderDetailPK().getItemCode());
-            pstm.setObject(3,OrderDetail.getOrderQty());
-            pstm.setObject(4,OrderDetail.getUnitprice());
-
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("INSERT INTO orderDetail VALUES (?,?,?,?)",
+                    OrderDetail.getOrderDetailPK().getOrderId(),
+                    OrderDetail.getOrderDetailPK().getItemCode(),OrderDetail.getOrderQty(),
+                    OrderDetail.getUnitprice());
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -67,17 +57,10 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
 
     @Override
     public boolean update(OrderDetail OrderDetail) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement
-                    ("UPDATE orderDetail SET orderQty=?,unitPrice=? WHERE orderId =?,itemCode=?)");
-
-            pstm.setObject(4,OrderDetail.getOrderDetailPK().getOrderId());
-            pstm.setObject(3,OrderDetail.getOrderDetailPK().getItemCode());
-            pstm.setObject(1,OrderDetail.getOrderQty());
-            pstm.setObject(2,OrderDetail.getUnitprice());
-
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("UPDATE orderDetail SET orderQty=?,unitPrice=? WHERE orderId =?,itemCode=?",
+                    OrderDetail.getOrderQty(),OrderDetail.getUnitprice(),
+                    OrderDetail.getOrderDetailPK().getOrderId(),OrderDetail.getOrderDetailPK().getItemCode());
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -86,12 +69,9 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
 
     @Override
     public boolean delete(OrderDetailPK orderDetailPK) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM orderDetail WHERE orderId =?, itemCode=?");
-            pstm.setObject(1,orderDetailPK.getOrderId());
-            pstm.setObject(2,orderDetailPK.getItemCode());
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("DELETE FROM orderDetail WHERE orderId =?, itemCode=?",
+                    orderDetailPK.getOrderId(),orderDetailPK.getItemCode());
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

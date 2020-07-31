@@ -13,11 +13,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Customer find(String key) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id =?");
-            pstm.setObject(1,key);
-            ResultSet rst = pstm.executeQuery();
+            ResultSet rst = CrudUtil.execute("SELECT * FROM Customer WHERE id =?",key);
             if (rst.next()){
                 return new Customer(rst.getString(1), rst.getString(2),
                         rst.getString(3));
@@ -30,13 +27,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean save(Customer customer) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer VALUES (?,?,?)");
-            pstm.setObject(1,customer.getId());
-            pstm.setObject(2,customer.getName());
-            pstm.setObject(3,customer.getAddress());
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("INSERT INTO Customer VALUES (?,?,?)",
+                    customer.getId(),customer.getName(),customer.getAddress());
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -46,12 +39,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public boolean update(Customer customer) {
         try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET customerName=?, CustomerAddress=? WHERE customerId=?");
-            pstm.setObject(3, customer.getId());
-            pstm.setObject(1, customer.getName());
-            pstm.setObject(2, customer.getAddress());
-            return pstm.executeUpdate() > 0;
+            return CrudUtil.execute("UPDATE Customer SET customerName=?, CustomerAddress=? WHERE customerId=?",
+                    customer.getName(),customer.getAddress(),customer.getId());
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return false;
@@ -60,11 +49,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean delete(String key) {
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE customerId =?");
-            pstm.setObject(1,key);
-            return pstm.executeUpdate()>0;
+            return CrudUtil.execute("DELETE FROM Customer WHERE customerId=?", key);
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -73,9 +59,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     public String getLastCustomerId(){
         try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer ORDER BY customerid DESC  LIMIT 1");
+            ResultSet rst = CrudUtil.execute("SELECT * FROM Customer ORDER BY customerid DESC  LIMIT 1");
             if (rst.next()){
                 return rst.getString(1);
             }else{
@@ -89,10 +73,8 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public List<Customer> findAll(){
-        Connection connection = DBConnection.getInstance().getConnection();
         try {
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
+            ResultSet rst = CrudUtil.execute("SELECT * FROM Customer");
             ArrayList<Customer> customers = new ArrayList<>();
             while (rst.next()){
                 customers.add( new Customer(rst.getString(1), rst.getString(2),

@@ -11,9 +11,11 @@ import util.CustomerTM;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CustomerBOImpl implements CustomerBO {
+    private CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
+
     public String getNewCustomerId() throws Exception {
-        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
         String lastCustomerId = customerDAO.getLastCustomerId();
         if (lastCustomerId == null){
             return "C001";
@@ -33,7 +35,6 @@ public class CustomerBOImpl implements CustomerBO {
     }
 
     public List<CustomerTM> getAllCustomers() throws Exception {
-        CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
         List<Customer> allCustomers = customerDAO.findAll();
         ArrayList<CustomerTM> customers = new ArrayList<>();
         for (Object c : allCustomers) {
@@ -44,12 +45,10 @@ public class CustomerBOImpl implements CustomerBO {
     }
 
     public boolean saveCustomer(String id, String name, String address) throws Exception {
-        CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
         return customerDAO.save(new Customer(id,name,address));
     }
 
     public boolean deleteCustomer(String customerId){
-        CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
         try {
             return customerDAO.delete(customerId);
         } catch (Exception e) {
@@ -60,8 +59,6 @@ public class CustomerBOImpl implements CustomerBO {
 
 
     public boolean updateCustomer(String name, String address, String customerId)throws Exception{
-        CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
             return customerDAO.update(new Customer(customerId, name, address));
     }
-
 }

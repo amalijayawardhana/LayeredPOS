@@ -1,5 +1,10 @@
 package controller;
 
+import business.BOFactory;
+import business.BOType;
+import business.custom.CustomerBO;
+import business.custom.ItemBO;
+import business.custom.OrderBO;
 import business.custom.impl.CustomerBOImpl;
 import business.custom.impl.ItemBOImpl;
 import business.custom.impl.OrderBOImpl;
@@ -49,7 +54,9 @@ public class PlaceOrderFormController {
     public JFXButton btnAddNewOrder;
     public TableView<OrderDetailTM> tblOrderDetails;
     private boolean readOnly;
-
+    private CustomerBO customerBO = BOFactory.getInstance().getBO(BOType.CUSTOMER);
+    private ItemBO itemBO = BOFactory.getInstance().getBO(BOType.ITEM);
+    private OrderBO orderBO = BOFactory.getInstance().getBO(BOType.ORDER);
     public void initialize() {
 
         readOnly = false;
@@ -149,13 +156,17 @@ public class PlaceOrderFormController {
 
     private void loadAllItems() {
         cmbItemCode.getItems().clear();
-        cmbItemCode.setItems(FXCollections.observableArrayList(ItemBOImpl.getAllItems()));
+        try {
+            cmbItemCode.setItems(FXCollections.observableArrayList(itemBO.getAllItems()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadAllCustomers() {
         cmbCustomerId.getItems().clear();
         try {
-            cmbCustomerId.setItems(FXCollections.observableArrayList(CustomerBOImpl.getAllCustomers()));
+            cmbCustomerId.setItems(FXCollections.observableArrayList(customerBO.getAllCustomers()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -260,7 +271,12 @@ public class PlaceOrderFormController {
 
         // Let's save the order
         //int orderId = Integer.parseInt(lblId.getText().replace("OD", ""));
-        boolean result = OrderBOImpl.placeOrders(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
+        boolean result = false;
+        try {
+            result = orderBO.placeOrders(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (!result){
             new Alert(Alert.AlertType.ERROR, "Mudalali wade awul wage", ButtonType.OK).show();
             return;
@@ -328,7 +344,11 @@ public class PlaceOrderFormController {
             }
         }*/
 
-        lblId.setText(OrderBOImpl.getNewOrderId());
+        try {
+            lblId.setText(orderBO.getNewOrderId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     void initializeWithSearchOrderForm(String orderId) {

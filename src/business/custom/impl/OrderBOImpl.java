@@ -20,8 +20,12 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class OrderBOImpl implements OrderBO {
+   private OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
+   private OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDERDETAIL);
+   private ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
+
+
     public String getNewOrderId() throws Exception{
-        OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
         String lastOrderId = null;
             lastOrderId = orderDAO.getLastOrderId();
         if (lastOrderId == null){
@@ -42,9 +46,6 @@ public class OrderBOImpl implements OrderBO {
     }
     public boolean placeOrders(OrderTM order, List<OrderDetailTM> orderDetails) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
-        OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
-        OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDERDETAIL);
-
         try {
             connection.setAutoCommit(false);
 
@@ -60,7 +61,6 @@ public class OrderBOImpl implements OrderBO {
                     connection.rollback();
                     return false;
                 }
-                ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
                 Item item = itemDAO.find(orderDetail.getCode());
                 item.setQtyOnHand(item.getqtyOnHand()-orderDetail.getQty());
                 System.out.println(item.getqtyOnHand()-orderDetail.getQty());

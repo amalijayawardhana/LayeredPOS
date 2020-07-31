@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemBOImpl implements ItemBO {
+    private ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
+
     public List<ItemTM> getAllItems() throws Exception{
-        ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
         List<Item> allItems = null;
         try {
             allItems = itemDAO.findAll();
@@ -29,7 +30,6 @@ public class ItemBOImpl implements ItemBO {
     }
 
     public String getNewitemCode()throws Exception{
-        ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
         String lastitemCode = null;
             lastitemCode = itemDAO.getLastitemCode();
         if (lastitemCode == null){
@@ -50,17 +50,14 @@ public class ItemBOImpl implements ItemBO {
     }
 
     public boolean saveItem(String code, String description, int qtyOnHand, double unitPrice)throws Exception{
-        ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
             return itemDAO.save(new Item(code, description, BigDecimal.valueOf(unitPrice), qtyOnHand));
     }
 
     public boolean deleteItem(String itemCode) throws Exception{
-        ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
             return itemDAO.delete(itemCode);
     }
 
     public boolean updateItem(String description, int qtyOnHand, double unitPrice, String itemCode)throws Exception{
-        ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
             return itemDAO.update(new Item(itemCode, description, BigDecimal.valueOf(unitPrice),qtyOnHand));
     }
 }

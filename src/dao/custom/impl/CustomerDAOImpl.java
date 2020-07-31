@@ -12,78 +12,50 @@ import java.util.List;
 public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
-    public Customer find(String key) {
-        try {
+    public Customer find(String key) throws Exception {
             ResultSet rst = CrudUtil.execute("SELECT * FROM Customer WHERE id =?",key);
             if (rst.next()){
                 return new Customer(rst.getString(1), rst.getString(2),
                         rst.getString(3));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
     @Override
-    public boolean save(Customer customer) {
-        try {
+    public boolean save(Customer customer)throws Exception {
             return CrudUtil.execute("INSERT INTO Customer VALUES (?,?,?)",
                     customer.getId(),customer.getName(),customer.getAddress());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
-    public boolean update(Customer customer) {
-        try {
+    public boolean update(Customer customer)throws Exception {
+
             return CrudUtil.execute("UPDATE Customer SET customerName=?, CustomerAddress=? WHERE customerId=?",
                     customer.getName(),customer.getAddress(),customer.getId());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
-        }
     }
 
     @Override
-    public boolean delete(String key) {
-        try {
+    public boolean delete(String key) throws Exception{
             return CrudUtil.execute("DELETE FROM Customer WHERE customerId=?", key);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
-    public String getLastCustomerId(){
-        try {
+    public String getLastCustomerId()throws Exception{
             ResultSet rst = CrudUtil.execute("SELECT * FROM Customer ORDER BY customerid DESC  LIMIT 1");
             if (rst.next()){
                 return rst.getString(1);
             }else{
                 return null;
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return null;
-        }
     }
 
     @Override
-    public List<Customer> findAll(){
-        try {
+    public List<Customer> findAll()throws Exception{
             ResultSet rst = CrudUtil.execute("SELECT * FROM Customer");
             ArrayList<Customer> customers = new ArrayList<>();
             while (rst.next()){
                 customers.add( new Customer(rst.getString(1), rst.getString(2),
                         rst.getString(3)));
             }
-            return customers;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 }

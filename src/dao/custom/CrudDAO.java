@@ -7,9 +7,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface CrudDAO<T extends SuperEntity, ID extends Serializable> extends SuperDAO {
-    List<T> findAll();
-    T find(ID key);
-    boolean save(T entity);
-    boolean update(T entity);
-    boolean delete(ID key);
+    List<T> findAll()throws Exception;
+    T find(ID key)throws Exception;
+    boolean save(T entity)throws Exception;
+    boolean update(T entity)throws Exception;
+    boolean delete(ID key)throws Exception;
 }

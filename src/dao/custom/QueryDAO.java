@@ -4,8 +4,8 @@ import dao.SuperDAO;
 import entity.CustomEntity;
 
 public interface QueryDAO extends SuperDAO {
-    CustomEntity getCustomerDetail1(String orderId);
-    CustomEntity getCustomerDetail2(String customerId);
-    CustomEntity getOrderDetail(String orderId);
+    CustomEntity getCustomerDetail1(String orderId)throws Exception;
+    CustomEntity getCustomerDetail2(String customerId)throws Exception;
+    CustomEntity getOrderDetail(String orderId)throws Exception;
 
 }

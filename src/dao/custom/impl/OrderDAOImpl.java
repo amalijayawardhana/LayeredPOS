@@ -11,22 +11,16 @@ import java.util.List;
 
 public class OrderDAOImpl implements OrderDAO {
 
-    public String getLastOrderId(){
-        try {
+    public String getLastOrderId()throws Exception{
             ResultSet rst = CrudUtil.execute("SELECT * FROM `order` ORDER BY orderId DESC  LIMIT 1");
             if (rst.next()){
                 return rst.getString(1);
             }else{
                 return null;
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return null;
-        }
     }
 
-    public List<Order> findAll(){
-        try {
+    public List<Order> findAll()throws Exception{
             ResultSet rst = CrudUtil.execute("SELECT * FROM `order`");
             ArrayList<Order> orders = new ArrayList<>();
             while (rst.next()){
@@ -34,55 +28,32 @@ public class OrderDAOImpl implements OrderDAO {
                         rst.getString(3)));
             }
             return orders;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     @Override
-    public Order find(String key) {
-        try {
+    public Order find(String key)throws Exception {
             ResultSet rst = CrudUtil.execute("SELECT * FROM `order` WHERE orderId =?",key);
             if (rst.next()){
                 return new Order(rst.getString(1), rst.getDate(2),
                         rst.getString(3));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
     @Override
-    public boolean save(Order order) {
-        try {
+    public boolean save(Order order)throws Exception {
             return CrudUtil.execute("INSERT INTO `order` VALUES (?,?,?)",order.getOrderId(),order.getOrderDate(),
                     order.getCustomerId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
-    public boolean update(Order order) {
-        try {
+    public boolean update(Order order) throws Exception{
             return CrudUtil.execute("UPDATE `order` SET orderDate=?,customerId=? WHERE orderId =?)"
                     ,order.getOrderDate(),order.getCustomerId(),order.getOrderId());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
-    public boolean delete(String key) {
-        try {
+    public boolean delete(String key)throws Exception {
             return CrudUtil.execute("DELETE FROM `order` WHERE orderId =?", key);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 }

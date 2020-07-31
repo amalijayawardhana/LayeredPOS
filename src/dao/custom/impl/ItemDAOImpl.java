@@ -11,55 +11,34 @@ import java.util.List;
 
 public class ItemDAOImpl implements ItemDAO {
     @Override
-    public Item find(String key) {
-        try {
+    public Item find(String key)throws Exception {
             ResultSet rst = CrudUtil.execute("SELECT * FROM Item WHERE itemCode =?",key);
             if (rst.next()) {
                 return new Item(rst.getString(1), rst.getString(2),
                         rst.getBigDecimal(3), rst.getInt(4));
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
     @Override
-    public boolean save(Item item) {
-        try {
+    public boolean save(Item item)throws Exception {
             return CrudUtil.execute("INSERT INTO Item VALUES (?,?,?,?)",item.getItemcode(),item.getDescription()
                     ,item.getUnitprice(),item.getqtyOnHand());
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     @Override
-    public boolean update(Item item) {
-        try {
+    public boolean update(Item item) throws Exception{
             return CrudUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE itemCode=?",item.getDescription()
                     ,item.getUnitprice(),item.getqtyOnHand(),item.getItemcode());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return false;
-        }
     }
 
     @Override
-    public boolean delete(String key) {
-        try {
+    public boolean delete(String key)throws Exception {
             return CrudUtil.execute("DELETE FROM Item WHERE itemCode =?", key);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-
     }
 
     @Override
-    public List<Item> findAll() {
-        try {
+    public List<Item> findAll()throws Exception {
             ResultSet rst = CrudUtil.execute("SELECT * FROM Item");
             ArrayList<Item> items = new ArrayList<>();
             while (rst.next()) {
@@ -67,14 +46,9 @@ public class ItemDAOImpl implements ItemDAO {
                         rst.getBigDecimal(3), rst.getInt(4)));
             }
             return items;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
-    public String getLastitemCode() {
-        try {
+    public String getLastitemCode() throws Exception{
             Connection connection = DBConnection.getInstance().getConnection();
             Statement stm = connection.createStatement();
             ResultSet rst = stm.executeQuery("SELECT * FROM Item ORDER BY itemcode DESC  LIMIT 1");
@@ -83,10 +57,5 @@ public class ItemDAOImpl implements ItemDAO {
             } else {
                 return null;
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-            return null;
-        }
     }
-
 }

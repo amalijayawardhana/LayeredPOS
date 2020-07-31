@@ -1,5 +1,6 @@
-package business;
+package business.custom.impl;
 
+import business.custom.OrderBO;
 import dao.DAOFactory;
 import dao.DAOType;
 import dao.custom.ItemDAO;
@@ -18,15 +19,11 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
-public class OrderBO {
-    public static String getNewOrderId(){
+public class OrderBOImpl implements OrderBO {
+    public String getNewOrderId() throws Exception{
         OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
         String lastOrderId = null;
-        try {
             lastOrderId = orderDAO.getLastOrderId();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         if (lastOrderId == null){
             return "D001";
         }else{
@@ -43,7 +40,7 @@ public class OrderBO {
             return id;
         }
     }
-    public static boolean placeOrders(OrderTM order, List<OrderDetailTM> orderDetails) {
+    public boolean placeOrders(OrderTM order, List<OrderDetailTM> orderDetails) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
         OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOType.ORDERDETAIL);

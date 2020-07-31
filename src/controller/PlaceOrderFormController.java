@@ -1,8 +1,8 @@
 package controller;
 
-import business.CustomerBO;
-import business.ItemBO;
-import business.OrderBO;
+import business.custom.impl.CustomerBOImpl;
+import business.custom.impl.ItemBOImpl;
+import business.custom.impl.OrderBOImpl;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
@@ -149,13 +149,13 @@ public class PlaceOrderFormController {
 
     private void loadAllItems() {
         cmbItemCode.getItems().clear();
-        cmbItemCode.setItems(FXCollections.observableArrayList(ItemBO.getAllItems()));
+        cmbItemCode.setItems(FXCollections.observableArrayList(ItemBOImpl.getAllItems()));
     }
 
     private void loadAllCustomers() {
         cmbCustomerId.getItems().clear();
         try {
-            cmbCustomerId.setItems(FXCollections.observableArrayList(CustomerBO.getAllCustomers()));
+            cmbCustomerId.setItems(FXCollections.observableArrayList(CustomerBOImpl.getAllCustomers()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -260,7 +260,7 @@ public class PlaceOrderFormController {
 
         // Let's save the order
         //int orderId = Integer.parseInt(lblId.getText().replace("OD", ""));
-        boolean result = OrderBO.placeOrders(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
+        boolean result = OrderBOImpl.placeOrders(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
         if (!result){
             new Alert(Alert.AlertType.ERROR, "Mudalali wade awul wage", ButtonType.OK).show();
             return;
@@ -328,7 +328,7 @@ public class PlaceOrderFormController {
             }
         }*/
 
-        lblId.setText(OrderBO.getNewOrderId());
+        lblId.setText(OrderBOImpl.getNewOrderId());
     }
 
     void initializeWithSearchOrderForm(String orderId) {

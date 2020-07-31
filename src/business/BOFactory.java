@@ -1,5 +1,8 @@
 package business;
 
+import business.custom.impl.CustomerBOImpl;
+import business.custom.impl.ItemBOImpl;
+import business.custom.impl.OrderBOImpl;
 import dao.DAOFactory;
 import dao.DAOType;
 import dao.SuperDAO;
@@ -18,11 +21,11 @@ public class BOFactory {
     public <T extends SuperBO> T getBO(BOType boType) {
         switch (boType) {
             case CUSTOMER:
-                return (T) new CustomerDAOImpl();
+                return (T) new CustomerBOImpl();
             case ITEM:
-                return (T) new ItemDAOImpl();
+                return (T) new ItemBOImpl();
             case ORDER:
-                return (T) new OrderDAOImpl();
+                return (T) new OrderBOImpl();
             default:
                 return null;
         }

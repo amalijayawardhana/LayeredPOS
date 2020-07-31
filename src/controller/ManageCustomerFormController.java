@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
  * @author ranjith-suranga
  */
 public class ManageCustomerFormController implements Initializable {
-        private CustomerBO customerbo = BOFactory.getInstance().getBO(BOType.CUSTOMER);
+    private CustomerBO customerbo = BOFactory.getInstance().getBO(BOType.CUSTOMER);
     @FXML
     private Button btnSave;
     @FXML
@@ -96,15 +96,15 @@ public class ManageCustomerFormController implements Initializable {
     }
 
     private void loadAllCustomers() {
-        tblCustomers.getItems().clear();
-        List<CustomerTM> allCustomers = null;
         try {
-            allCustomers = customerbo.getAllCustomers();
+            tblCustomers.getItems().clear();
+            List<CustomerTM> allCustomers = customerbo.getAllCustomers();
+            ObservableList<CustomerTM> customers = FXCollections.observableList(allCustomers);
+            tblCustomers.setItems(customers);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ObservableList<CustomerTM> customers = FXCollections.observableList(allCustomers);
-        tblCustomers.setItems(customers);
+
     }
 
     @FXML

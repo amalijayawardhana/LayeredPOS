@@ -56,7 +56,7 @@ public class CustomerDAOImpl implements CustomerDAO {
                 customers.add( new Customer(rst.getString(1), rst.getString(2),
                         rst.getString(3)));
             }
-        return null;
+        return customers;
     }
 }
 

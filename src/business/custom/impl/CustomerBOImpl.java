@@ -36,9 +36,8 @@ public class CustomerBOImpl implements CustomerBO {
 
     public List<CustomerTM> getAllCustomers() throws Exception {
         List<Customer> allCustomers = customerDAO.findAll();
-        ArrayList<CustomerTM> customers = new ArrayList<>();
-        for (Object c : allCustomers) {
-            Customer customer = (Customer) c;
+        List<CustomerTM> customers = new ArrayList<>();
+        for (Customer customer : allCustomers) {
             customers.add(new CustomerTM(customer.getId(),customer.getName(),customer.getAddress()));
         }
         return customers;

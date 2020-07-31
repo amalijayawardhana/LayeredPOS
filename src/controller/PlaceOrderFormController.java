@@ -157,7 +157,11 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomers() {
         cmbCustomerId.getItems().clear();
-        cmbCustomerId.setItems(FXCollections.observableArrayList(BusinessLogic.getAllCustomers()));
+        try {
+            cmbCustomerId.setItems(FXCollections.observableArrayList(BusinessLogic.getAllCustomers()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void calculateQtyOnHand(ItemTM item) {

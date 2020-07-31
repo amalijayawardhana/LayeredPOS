@@ -99,7 +99,12 @@ public class ManageCustomerFormController implements Initializable {
 
     private void loadAllCustomers() {
         tblCustomers.getItems().clear();
-        List<CustomerTM> allCustomers = BusinessLogic.getAllCustomers();
+        List<CustomerTM> allCustomers = null;
+        try {
+            allCustomers = BusinessLogic.getAllCustomers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ObservableList<CustomerTM> customers = FXCollections.observableList(allCustomers);
         tblCustomers.setItems(customers);
     }
@@ -126,7 +131,11 @@ public class ManageCustomerFormController implements Initializable {
         }
 
         if (btnSave.getText().equals("Save")) {
-            BusinessLogic.saveCustomer(txtCustomerId.getText(),txtCustomerName.getText(),txtCustomerAddress.getText());
+            try {
+                BusinessLogic.saveCustomer(txtCustomerId.getText(),txtCustomerName.getText(),txtCustomerAddress.getText());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             btnAddNew_OnAction(event);
         } else {
             CustomerTM selectedItem = tblCustomers.getSelectionModel().getSelectedItem();
@@ -170,7 +179,11 @@ public class ManageCustomerFormController implements Initializable {
         btnSave.setDisable(false);
 
         // Generate a new id
-        txtCustomerId.setText(BusinessLogic.getNewCustomerId());
+        try {
+            txtCustomerId.setText(BusinessLogic.getNewCustomerId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessLogic {
-    public static String getNewCustomerId(){
+    public static String getNewCustomerId() throws Exception {
         CustomerDAOImpl customerDAO = new CustomerDAOImpl();
         String lastCustomerId = customerDAO.getLastCustomerId();
         if (lastCustomerId == null){
@@ -52,7 +52,7 @@ public class BusinessLogic {
         }
     }
 
-    public static List<CustomerTM> getAllCustomers(){
+    public static List<CustomerTM> getAllCustomers() throws Exception {
         CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
         List<Customer> allCustomers = customerDAO.findAll();
         ArrayList<CustomerTM> customers = new ArrayList<>();
@@ -63,25 +63,40 @@ public class BusinessLogic {
         return customers;
     }
 
-    public static boolean saveCustomer(String id, String name, String address){
+    public static boolean saveCustomer(String id, String name, String address) throws Exception {
         CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
         return customerDAO.save(new Customer(id,name,address));
     }
 
     public static boolean deleteCustomer(String customerId){
         CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
-        return customerDAO.delete(customerId);
+        try {
+            return customerDAO.delete(customerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
     public static boolean updateCustomer(String name, String address, String customerId){
         CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOType.CUSTOMER);
-        return customerDAO.update(new Customer(customerId, name, address));
+        try {
+            return customerDAO.update(new Customer(customerId, name, address));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static List<ItemTM> getAllItems(){
         ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
-        List<Item> allItems = itemDAO.findAll();
+        List<Item> allItems = null;
+        try {
+            allItems = itemDAO.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ArrayList<ItemTM> items = new ArrayList<>();
         for (Object i : allItems) {
             Item item = (Item) i;
@@ -92,7 +107,12 @@ public class BusinessLogic {
 
     public static String getNewitemCode(){
         ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
-        String lastitemCode = itemDAO.getLastitemCode();
+        String lastitemCode = null;
+        try {
+            lastitemCode = itemDAO.getLastitemCode();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (lastitemCode == null){
             return "I001";
         }else{
@@ -112,22 +132,42 @@ public class BusinessLogic {
 
     public static boolean saveItem(String code, String description, int qtyOnHand, double unitPrice){
         ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
-        return itemDAO.save(new Item(code, description, BigDecimal.valueOf(unitPrice), qtyOnHand));
+        try {
+            return itemDAO.save(new Item(code, description, BigDecimal.valueOf(unitPrice), qtyOnHand));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static boolean deleteItem(String itemCode){
         ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
-        return itemDAO.delete(itemCode);
+        try {
+            return itemDAO.delete(itemCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static boolean updateItem(String description, int qtyOnHand, double unitPrice, String itemCode){
         ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
-        return itemDAO.update(new Item(itemCode, description, BigDecimal.valueOf(unitPrice),qtyOnHand));
+        try {
+            return itemDAO.update(new Item(itemCode, description, BigDecimal.valueOf(unitPrice),qtyOnHand));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public static String getNewOrderId(){
         OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
-        String lastOrderId = orderDAO.getLastOrderId();
+        String lastOrderId = null;
+        try {
+            lastOrderId = orderDAO.getLastOrderId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (lastOrderId == null){
             return "D001";
         }else{
@@ -187,6 +227,8 @@ public class BusinessLogic {
                 e.printStackTrace();
             }
             return false;
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             try {
                 connection.setAutoCommit(true);

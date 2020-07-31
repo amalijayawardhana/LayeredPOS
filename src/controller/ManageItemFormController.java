@@ -5,9 +5,8 @@
  */
 package controller;
 
-import business.BusinessLogic;
+import business.ItemBO;
 import com.jfoenix.controls.JFXTextField;
-import db.DBConnection;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -30,10 +29,6 @@ import util.ItemTM;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -105,7 +100,7 @@ public class ManageItemFormController implements Initializable {
     private void loadAllItems() {
         ObservableList<ItemTM> items = tblItems.getItems();
         items.clear();
-        items = FXCollections.observableArrayList(BusinessLogic.getAllItems());
+        items = FXCollections.observableArrayList(ItemBO.getAllItems());
         tblItems.setItems(items);
     }
 
@@ -138,14 +133,14 @@ public class ManageItemFormController implements Initializable {
         }
 
         if (btnSave.getText().equals("Save")) {
-            boolean result = BusinessLogic.saveItem(txtCode.getText(), txtDescription.getText(), qtyOnHand, unitPrice);
+            boolean result = ItemBO.saveItem(txtCode.getText(), txtDescription.getText(), qtyOnHand, unitPrice);
             if (!result){
                 new Alert(Alert.AlertType.ERROR, "Failed to save the item", ButtonType.OK).show();
             }
             btnAddNew_OnAction(event);
         } else {
             ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
-            boolean result = BusinessLogic.updateItem(txtDescription.getText(),  qtyOnHand, unitPrice, selectedItem.getCode());
+            boolean result = ItemBO.updateItem(txtDescription.getText(),  qtyOnHand, unitPrice, selectedItem.getCode());
             if (!result) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the Item").show();
             }
@@ -163,7 +158,7 @@ public class ManageItemFormController implements Initializable {
         Optional<ButtonType> buttonType = alert.showAndWait();
         if (buttonType.get() == ButtonType.YES) {
             ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
-            boolean result = BusinessLogic.deleteItem(selectedItem.getCode());
+            boolean result = ItemBO.deleteItem(selectedItem.getCode());
             if (!result){
                 new Alert(Alert.AlertType.ERROR, "Failed to delete the item", ButtonType.OK).show();
             }else{
@@ -187,7 +182,7 @@ public class ManageItemFormController implements Initializable {
         btnSave.setDisable(false);
 
         // Generate a new id
-        txtCode.setText(BusinessLogic.getNewitemCode());
+        txtCode.setText(ItemBO.getNewitemCode());
 
     }
 

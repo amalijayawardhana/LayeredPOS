@@ -1,10 +1,11 @@
 package controller;
 
-import business.BusinessLogic;
+import business.CustomerBO;
+import business.ItemBO;
+import business.OrderBO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import db.DBConnection;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -25,10 +26,6 @@ import util.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -152,13 +149,13 @@ public class PlaceOrderFormController {
 
     private void loadAllItems() {
         cmbItemCode.getItems().clear();
-        cmbItemCode.setItems(FXCollections.observableArrayList(BusinessLogic.getAllItems()));
+        cmbItemCode.setItems(FXCollections.observableArrayList(ItemBO.getAllItems()));
     }
 
     private void loadAllCustomers() {
         cmbCustomerId.getItems().clear();
         try {
-            cmbCustomerId.setItems(FXCollections.observableArrayList(BusinessLogic.getAllCustomers()));
+            cmbCustomerId.setItems(FXCollections.observableArrayList(CustomerBO.getAllCustomers()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -263,7 +260,7 @@ public class PlaceOrderFormController {
 
         // Let's save the order
         //int orderId = Integer.parseInt(lblId.getText().replace("OD", ""));
-        boolean result = BusinessLogic.placeOrders(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
+        boolean result = OrderBO.placeOrders(new OrderTM(lblId.getText(), LocalDate.now(), cmbCustomerId.getValue().getId(), cmbCustomerId.getValue().getName(),0),tblOrderDetails.getItems());
         if (!result){
             new Alert(Alert.AlertType.ERROR, "Mudalali wade awul wage", ButtonType.OK).show();
             return;
@@ -331,7 +328,7 @@ public class PlaceOrderFormController {
             }
         }*/
 
-        lblId.setText(BusinessLogic.getNewOrderId());
+        lblId.setText(OrderBO.getNewOrderId());
     }
 
     void initializeWithSearchOrderForm(String orderId) {

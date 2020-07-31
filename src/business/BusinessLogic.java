@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BusinessLogic {
-    public static String getNewCustomerId() throws Exception {
+    /*public static String getNewCustomerId() throws Exception {
         CustomerDAOImpl customerDAO = new CustomerDAOImpl();
         String lastCustomerId = customerDAO.getLastCustomerId();
         if (lastCustomerId == null){
@@ -88,8 +88,8 @@ public class BusinessLogic {
             return false;
         }
     }
-
-    public static List<ItemTM> getAllItems(){
+*/
+    /*public static List<ItemTM> getAllItems(){
         ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOType.ITEM);
         List<Item> allItems = null;
         try {
@@ -158,9 +158,9 @@ public class BusinessLogic {
             e.printStackTrace();
             return false;
         }
-    }
+    }*/
 
-    public static String getNewOrderId(){
+    /*public static String getNewOrderId(){
         OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOType.ORDER);
         String lastOrderId = null;
         try {
@@ -237,5 +237,5 @@ public class BusinessLogic {
             }
         }
         return false;
-    }
+    }*/
 }
